@@ -18,7 +18,6 @@ const zero = document.querySelector('.zero');
 */
 let displayVar = "";
 const operatorArray = ["+","-","×","÷"];
-let operatorCount = 0;
 
 const numArray = Array.from(numNodeList);
 numArray.forEach( element => element.addEventListener('click',addNumToDisplay));
@@ -27,20 +26,24 @@ const opArray = Array.from(opNodeList);
 opArray.forEach( element => element.addEventListener('click',addOpToDisplay));
 
 equals.addEventListener('click', equalFunc);
+AC.addEventListener('click',reset);
 
 function addNumToDisplay(e){
-    display.textContent= display.textContent + this.textContent;
+    display.textContent = display.textContent + this.textContent;
     displayVar = display.textContent;
 }
 
 function addOpToDisplay(e){
-    // If the previous button pressed was also an operator, return without adding to display
+    // If the previous button pressed was also an operator, exit function without adding to display
     if (operatorArray.includes(display.textContent.charAt(display.textContent.length - 1))) return;
 
-    // If the display already has an operator, then compute
+    // If the display already has an operator, then compute the result, add on the operator just pressed, and display both
     if (displayVar.includes('+') || displayVar.includes('-') || displayVar.includes('×') || displayVar.includes('÷')){
         let answer = compute(displayVar);
-        answer = answer.toFixed(decPlaces);
+        if (answer === 'error'){
+            return;
+        }
+        answer = +answer.toFixed(decPlaces);
         display.textContent = answer + this.textContent;
         displayVar = display.textContent;
         return;
@@ -55,9 +58,14 @@ function equalFunc (e){
     if (answer === 'error'){
         return;
     }
-    answer = answer.toFixed(decPlaces);
+    answer = +answer.toFixed(decPlaces);
     display.textContent = answer;
     displayVar = display.textContent;
+}
+
+function reset (e){
+    displayVar = "";
+    display.textContent = "";
 }
 
 
@@ -100,6 +108,10 @@ function compute (expressionString){
     else if (expressionString.includes('÷')){
         stringOperator = divide;
         operandArray = expressionString.split("÷");
+        if(operandArray[1] === '0'){
+            alert("You can't divide by zero!");
+            return 'error';
+        }
     }
     else {return 'error';} // there is only one operand, and no operator
 
