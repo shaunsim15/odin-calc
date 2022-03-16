@@ -12,6 +12,7 @@ let displayVar = "0";
 const numberArray = ["0","1","2","3","4","5","6","7","8","9"];
 const operatorArray = ["+","-","×","÷"];
 const decPlaces = 8;
+const maxChars = 17;
 
 // Add event listeners
 const numArray = Array.from(numNodeList);
@@ -33,6 +34,12 @@ function addNumToDisplay(e){
         displayVar = display.textContent;
         return;
     }
+
+    // If you add too many characters to the display, exit function w/o adding to display
+    if (displayVar.length > maxChars){
+        return;
+    }
+
     // Add numbers to display
     display.textContent = display.textContent + this.textContent;
     displayVar = display.textContent;
@@ -43,6 +50,11 @@ function addOpToDisplay(e){
     // If the previous button pressed was also an operator, exit function without adding to display
     if (operatorArray.includes(display.textContent.charAt(display.textContent.length - 1))) return;
 
+    // If you add too many characters to the display, exit function w/o adding to display
+    if (displayVar.length > maxChars){
+        return;
+    }
+
     // If the display already has an operator, then compute that result first, 
     // then add on the operator just pressed, and then display both
     if (displayVar.includes('+') || displayVar.includes('-') || displayVar.includes('×') || displayVar.includes('÷')){
@@ -51,6 +63,12 @@ function addOpToDisplay(e){
             return;
         }
         answer = +answer.toFixed(decPlaces);
+        // If you add too many characters to the display, exit function w/o adding to display
+        if (answer.toString().length > maxChars){
+            alert("Too many characters!");
+            return;
+        }
+
         display.textContent = answer + this.textContent;
         displayVar = display.textContent;
         return;
@@ -62,6 +80,11 @@ function addOpToDisplay(e){
 
 // Add decimal to display when correct button is pressed
 function addDecToDisplay(e){
+    // If you add too many characters to the display, exit function w/o adding to display
+    if (displayVar.length > maxChars){
+        return;
+    }
+
     let operandArray = [displayVar];
     // We want the previously inputted character to be a number (not an operator or empty)
     let prevChar = displayVar.charAt(displayVar.length - 1);
@@ -98,6 +121,11 @@ function equalFunc (e){
         return;
     }
     answer = +answer.toFixed(decPlaces);
+    // If you add too many characters to the display, exit function w/o adding to display
+    if (answer.toString().length > maxChars){
+        alert("Too many characters!");
+        return;
+    }
     display.textContent = answer;
     displayVar = display.textContent;
 }
