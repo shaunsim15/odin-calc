@@ -18,6 +18,7 @@ body{
     background-color: grey;
     border-radius: 0.5em;
     border: solid black;
+    box-shadow: 0.1rem 0.1rem 0.5rem black; /* hori offset, verti offset, blurring, color */
 }
 
 .outer-display{
