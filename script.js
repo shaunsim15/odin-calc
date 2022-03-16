@@ -55,9 +55,9 @@ function addOpToDisplay(e){
         return;
     }
 
-    // If the display already has an operator, then compute that result first, 
+    // If the display already has an operator (that is not due to a negative first number), then compute that result first, 
     // then add on the operator just pressed, and then display both
-    if (displayVar.includes('+') || displayVar.includes('-') || displayVar.includes('×') || displayVar.includes('÷')){
+    if (displayVar.slice(1).includes('+') || displayVar.slice(1).includes('-') || displayVar.slice(1).includes('×') || displayVar.slice(1).includes('÷')){
         let answer = compute(displayVar);
         if (answer === 'error'){
             return;
@@ -190,6 +190,13 @@ function operate (a, b, operator){
 function compute (expressionString){
     let stringOperator;
     let operandArray;
+    let isFirstNumberNegative = false;
+
+    // If the first number is negative, take out the minus sign before splitting
+    if (expressionString.charAt(0) === '-'){
+        expressionString = expressionString.slice(1);
+        isFirstNumberNegative = true;
+    }
 
     // Check that the string has an operator, and split the string at the operator
     if (expressionString.includes('+')){
@@ -218,6 +225,11 @@ function compute (expressionString){
     // Return an error if there is no second operand (i.e. there's only one operand & one operator.)
     if (operandArray[1] === ''){
         return 'error';
+    }
+
+    // If the first number was negative, add back the minus sign
+    if (isFirstNumberNegative === true){
+        operandArray[0] = '-' + operandArray[0]
     }
 
     // Compute the string and return the answer
